@@ -1,5 +1,6 @@
 # Eric瞎折腾 | mwxw.com
 # YouTube: https://www.youtube.com/@erictinkers
+# 源码合集: https://github.com/maochus/diy-smarthome
 #
 # 用法：
 # 1. 在 ESPHome 里新建设备，开发板选 "Espressif Generic ESP8266 ESP-01 1M"
