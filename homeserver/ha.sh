@@ -1,7 +1,11 @@
 #!/bin/bash
 # One-step installer: Docker + Home Assistant + ESPHome
 # Usage:  curl -sL s.mwxw.com/ha | sudo bash
-# Source code: https://github.com/maochus/diy-smarthome
+# Eric Tinkers - more DIY smart home videos:
+#   Website:  https://mwxw.com
+#   YouTube:  https://www.youtube.com/@erictinkers
+#   Bilibili: https://space.bilibili.com/3546776971774513
+#   Source:   https://github.com/maochus/diy-smarthome
 # Messages are in English on purpose: the Linux text console cannot show Chinese.
 
 set -u
