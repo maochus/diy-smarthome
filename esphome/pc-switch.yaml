@@ -1,0 +1,67 @@
+# Eric瞎折腾 | mwxw.com
+# YouTube: https://www.youtube.com/@erictinkers
+#
+# 用法：
+# 1. 在 ESPHome 里新建设备，开发板选 "Espressif Generic ESP8266 ESP-01 1M"
+# 2. 在右边自动生成的代码里，找到最后这一行：
+#
+#    captive_portal:
+#
+# 3. 把本文件里 "从这里开始复制" 到文件末尾的内容整段复制，粘贴到这一行后面
+# 4. 保存 → 安装
+#
+# 装好后会有三个按钮：
+#   PC Power Button   短按一下：开机；电脑开着时按＝正常关机（需要 Windows 里"按电源按钮时"设为"关机"）
+#   PC Force Off      按住5秒：强制关机，相当于长按机箱电源键，死机时用（会直接断电，没保存的东西会丢）
+#   PC Force Restart  强制关机 → 等5秒 → 再开机，死机时一键救回来（同样会直接断电）
+# 按钮名字加到 Home Assistant 以后可以改成中文。
+#
+# 小提示：模块通电的时候，继电器会"咔哒"响一下，这是正常现象。
+# 极少数主板如果因此被误触发开机/关机，欢迎在视频评论区告诉我。
+
+# ===== 从这里开始复制 =====
+
+switch:
+  - platform: gpio
+    pin: GPIO0
+    id: relay_hardware
+    inverted: yes
+    # 保护措施：万一模块自己重启了，继电器默认是松开的，不会一直按住开机键不放
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - logger.log: "Relay Engaged"
+
+button:
+  # 短按：开机 / 正常关机
+  - platform: template
+    name: "PC Power Button"
+    icon: "mdi:power"
+    on_press:
+      - switch.turn_on: relay_hardware
+      - delay: 500ms    # 按下0.5秒，模拟手指点一下，不用改
+      - switch.turn_off: relay_hardware
+
+  # 长按：强制关机
+  - platform: template
+    name: "PC Force Off"
+    icon: "mdi:power-plug-off"
+    on_press:
+      - switch.turn_on: relay_hardware
+      - delay: 5s       # 按住5秒；大多数主板要按住4秒以上才会强制关机，别改到4秒以下
+      - switch.turn_off: relay_hardware
+
+  # 强制重启：先强制关机，等一会儿，再开机
+  - platform: template
+    name: "PC Force Restart"
+    icon: "mdi:restart-alert"
+    on_press:
+      # 第一步：按住5秒，强制关机
+      - switch.turn_on: relay_hardware
+      - delay: 5s
+      - switch.turn_off: relay_hardware
+      # 第二步：等5秒，让电源彻底停下来（等太短有的主板会不理下一次开机）
+      - delay: 5s
+      # 第三步：短按一下，开机
+      - switch.turn_on: relay_hardware
+      - delay: 500ms
+      - switch.turn_off: relay_hardware

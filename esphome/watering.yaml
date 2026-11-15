@@ -1,0 +1,60 @@
+# Eric瞎折腾 | mwxw.com
+# YouTube: https://www.youtube.com/@erictinkers
+#
+# 自动浇花：ESP32-C3 Super Mini + 电容式土壤湿度传感器 + 继电器 + 5V 潜水小水泵
+#
+# 用法：
+#   1. 在 ESPHome 里新建设备，板子选 ESP32-C3 Super Mini
+#   2. 把下面全部内容，粘贴到配置文件最下面（captive_portal: 那一行的下面）
+#   3. 只需要改一个地方：下面"校准"那两个数字，换成你自己测出来的
+#      （可选）每次浇多少水：改倒数第二行的 15s
+#
+# 接线：
+#   传感器  VCC → 3.3V   GND → G   AOUT → 3 号脚
+#   继电器  +   → 5V     -   → G   S    → 4 号脚
+#   继电器  COM → 5V     NO  → 水泵红线      水泵黑线 → G
+
+sensor:
+  # 传感器电压：校准时看这个数
+  - platform: adc
+    pin: GPIO3
+    id: soil_raw
+    name: "传感器电压"
+    entity_category: diagnostic
+    attenuation: 12db
+    accuracy_decimals: 2
+    update_interval: 5s
+    filters:
+      - sliding_window_moving_average:
+          window_size: 6
+          send_every: 1
+      - delta: 0.01
+
+  # 土壤湿度：0% 最干，100% 最湿
+  - platform: copy
+    source_id: soil_raw
+    name: "土壤湿度"
+    device_class: moisture
+    unit_of_measurement: "%"
+    icon: "mdi:water-percent"
+    accuracy_decimals: 0
+    filters:
+      - calibrate_linear:
+        # ===== 校准：只改这两行左边的数字 =====
+          - 2.35 -> 0     # 放在空气里时的电压（最干）
+          - 1.00 -> 100   # 插在水里时的电压（最湿）
+      - clamp:
+          min_value: 0
+          max_value: 100
+
+switch:
+  - platform: gpio
+    pin: GPIO4
+    id: pump
+    name: "浇花"
+    icon: "mdi:watering-can"
+    restore_mode: ALWAYS_OFF
+    # 保护：水泵打开 15 秒后自动关掉，就算 Home Assistant 挂了也不会一直抽水
+    on_turn_on:
+      - delay: 15s
+      - switch.turn_off: pump
