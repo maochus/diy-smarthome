@@ -1,6 +1,7 @@
 #!/bin/bash
 # One-step installer: Immich photo backup (lite, no AI) + shared folder (Samba)
 # Usage:  curl -sL s.mwxw.com/home | sudo bash
+# Source code: https://github.com/maochus/diy-smarthome
 # Messages are in English on purpose: the Linux text console cannot show Chinese.
 
 set -u
