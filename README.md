@@ -15,7 +15,7 @@
 | [不用写代码，用 Apple Watch 抬手开电脑](https://youtu.be/QBDb6Sg9j2Y) | （无） | 网络唤醒（WOL），全程在 Home Assistant 界面里设置 |
 | [电脑死机也能救！抬手一按强制重启](https://youtu.be/i4462eRqjdE) | [`esphome/pc-switch.yaml`](esphome/pc-switch.yaml) | ESP-01S 继电器：开机 / 强制关机 / 强制重启 |
 | [花渴了会喊你！不用写代码的自动浇花](https://youtu.be/Rkomb-KXvPM) | [`esphome/watering.yaml`](esphome/watering.yaml) | ESP32-C3 + 土壤湿度传感器 + 水泵 |
-| 小教程 #3：装 Ubuntu Server | [`homeserver/ha.sh`](homeserver/ha.sh)<br>[`homeserver/home.sh`](homeserver/home.sh) | 一行命令装好 HA + ESPHome / 相册 + 共享盘 |
+| [小教程 #3：只要两条命令！让你的旧电脑变全能家庭服务器](https://youtu.be/UmjM99bESHk) | [`homeserver/ha.sh`](homeserver/ha.sh)<br>[`homeserver/home.sh`](homeserver/home.sh) | 一行命令装好 HA + ESPHome / 相册 + 共享盘 |
 
 ESPHome 配置的用法写在每个文件开头的注释里：在 ESPHome 里新建设备，把文件内容粘贴到自动生成的配置后面，保存、安装。
 
